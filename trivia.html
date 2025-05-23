@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Buzzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        #team-names {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #555;
+        }
+
+        #team-names div {
+            flex: 1;
+            margin: 0 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        #team-1-name {
+            justify-content: flex-end;
+        }
+
+        #team-2-name {
+            justify-content: flex-start;
+        }
+
+        #buzzer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        #buzzer-text {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            user-select: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        #player-names-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #team-1-players {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 48%;
+        }
+
+        #team-2-players {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 48%;
+        }
+
+        .player-name-input {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .player-name-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+        }
+
+        #reset-button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background-color: #e74c3c; /* Red */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #reset-button:hover {
+            background-color: #c0392b; /* Darker Red */
+            transform: scale(1.05);
+        }
+
+        #instructions {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #777;
+            line-height: 1.5;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        #instructions h2 {
+            font-size: 1.2rem;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .score-display {
+            margin: 0 10px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        #team-names div {
+            font-size: 1.5rem;
+        }
+
+        .score-button {
+            padding: 8px 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin: 0 5px;
+        }
+
+        .score-button:hover {
+            background-color: #2980b9;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            justify-content: center; /* Center the buttons */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trivia Activity!</h1>
+        <div id="team-names">
+            <div id="team-1-name">Team 1 <span id="team-1-score" class="score-display">0</span></div>
+            <div id="team-2-name"><span id="team-2-score" class="score-display">0</span> Team 2</div>
+        </div>
+        <div id="player-names-container">
+            <div id="team-1-players">
+                <input type="text" class="player-name-input" value="Player 1">
+                <input type="text" class="player-name-input" value="Player 2">
+                <input type="text" class="player-name-input" value="Player 3">
+            </div>
+            <div id="team-2-players">
+                <input type="text" class="player-name-input" value="Player 4">
+                <input type="text" class="player-name-input" value="Player 5">
+                <input type="text" class="player-name-input" value="Player 6">
+            </div>
+        </div>
+        <div id="buzzer-section">
+            <div id="buzzer-text">Waiting...</div>
+        </div>
+        <div class="button-container">
+            <button class="score-button" id="team-1-minus">-10</button>
+            <button class="score-button" id="team-1-plus">+10</button>
+            <button id="reset-button">Reset</button>
+            <button class="score-button" id="team-2-plus2">+10</button>
+            <button class="score-button" id="team-2-minus2">-10</button>
+        </div>
+    </div>
+    <script>
+        let team1Name = "Team 1";
+        let team2Name = "Team 2";
+        let team1PlayerNames = ["Player 1", "Player 2", "Player 3"];
+        let team2PlayerNames = ["Player 4", "Player 5", "Player 6"];
+        let buzzed = false;
+        let winningPlayer = "";
+        let resetButton, team1NameDisplay, team2NameDisplay, buzzerText;
+        let team1PlayerInputs, team2PlayerInputs;
+        let inputsActive = true;
+        let team1Score = 0;
+        let team2Score = 0;
+        let team1ScoreDisplay, team2ScoreDisplay;
+        let team1PlusButton, team1MinusButton, team2PlusButton, team2MinusButton;
+        let audio = new Audio("https://www.myinstants.com/media/sounds/censor-beep-3.mp3");
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get the elements here, inside the DOMContentLoaded function
+            resetButton = document.getElementById('reset-button');
+            team1NameDisplay = document.getElementById('team-1-name');
+            team2NameDisplay = document.getElementById('team-2-name');
+            buzzerText = document.getElementById('buzzer-text');
+            team1PlayerInputs = document.querySelectorAll('#team-1-players .player-name-input');
+            team2PlayerInputs = document.querySelectorAll('#team-2-players .player-name-input');
+            team1ScoreDisplay = document.getElementById('team-1-score');
+            team2ScoreDisplay = document.getElementById('team-2-score');
+            team1PlusButton = document.getElementById('team-1-plus');
+            team1MinusButton = document.getElementById('team-1-minus');
+            team2PlusButton = document.getElementById('team-2-plus2');
+            team2MinusButton = document.getElementById('team-2-minus2');
+
+             // Update player names
+            team1PlayerInputs.forEach((input, index) => {
+                input.addEventListener('change', () => {
+                    team1PlayerNames[index] = input.value;
+                });
+                input.addEventListener('focus', () => {
+                    inputsActive = false;
+                });
+                input.addEventListener('blur', () => {
+                    inputsActive = true;
+                });
+            });
+
+            team2PlayerInputs.forEach((input, index) => {
+                input.addEventListener('change', () => {
+                    team2PlayerNames[index] = input.value;
+                });
+                input.addEventListener('focus', () => {
+                    inputsActive = false;
+                });
+                input.addEventListener('blur', () => {
+                    inputsActive = true;
+                });
+            });
+
+
+            if (resetButton) {
+                resetButton.addEventListener('click', resetBuzzers);
+            }
+            if (team1PlusButton) {
+                team1PlusButton.addEventListener('click', (event) => {
+                    updateScore(1, 10);
+                    event.target.blur(); // Remove focus after click
+                });
+            }
+            if (team1MinusButton) {
+                team1MinusButton.addEventListener('click', (event) => {
+                    updateScore(1, -10);
+                    event.target.blur(); // Remove focus after click
+                });
+            }
+            if (team2PlusButton) {
+                team2PlusButton.addEventListener('click', (event) => {
+                    updateScore(2, 10);
+                    event.target.blur(); // Remove focus after click
+                });
+            }
+            if (team2MinusButton) {
+                team2MinusButton.addEventListener('click', (event) => {
+                    updateScore(2, -10);
+                    event.target.blur(); // Remove focus after click
+                });
+            }
+
+
+            document.addEventListener('keydown', (event) => {
+                if (inputsActive) {
+                    switch (event.key) {
+                        case 'q':
+                            handleBuzzerPress(team1PlayerNames[0]);
+                            break;
+                        case 'a':
+                            handleBuzzerPress(team1PlayerNames[1]);
+                            break;
+                        case 'z':
+                            handleBuzzerPress(team1PlayerNames[2]);
+                            break;
+                        case 'p':
+                            handleBuzzerPress(team2PlayerNames[0]);
+                            break;
+                        case 'l':
+                            handleBuzzerPress(team2PlayerNames[1]);
+                            break;
+                        case ',':
+                            handleBuzzerPress(team2PlayerNames[2]);
+                            break;
+                        case ' ':
+                            resetBuzzers();
+                            break;
+                    }
+                }
+            });
+
+            function handleBuzzerPress(playerName) {
+                if (!buzzed) {
+                    buzzed = true;
+                    winningPlayer = playerName;
+                    if (buzzerText) {
+                        buzzerText.textContent = playerName;
+                    }
+                    // Stop any currently playing audio before starting a new one
+                    if (audio.currentTime > 0) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                    audio.play();
+                }
+            }
+
+            function resetBuzzers() {
+                buzzed = false;
+                winningPlayer = "";
+                if (buzzerText) {
+                    buzzerText.textContent = "Waiting...";
+                }
+            }
+
+            function updateScore(team, amount) {
+                if (team === 1) {
+                    team1Score += amount;
+                    if (team1ScoreDisplay) {
+                        team1ScoreDisplay.textContent = team1Score;
+                    }
+                } else {
+                    team2Score += amount;
+                    if (team2ScoreDisplay) {
+                        team2ScoreDisplay.textContent = team2Score;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
